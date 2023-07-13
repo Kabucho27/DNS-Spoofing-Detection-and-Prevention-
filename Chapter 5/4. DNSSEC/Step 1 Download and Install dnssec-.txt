@@ -1,0 +1,13 @@
+Step 1: Download and Install dnssec-tools package.
+#apt-get install dnssec-tools
+
+Step 2: Enable DNSSEC, Validation and lookaside
+#nano named.conf.options
+	modify and add:
+		dnssec-enable yes;
+		dnssec-validation yes;
+		dnssec-lookaside auto;
+Step 3: restart bind
+#systemctl restart bind9
+$INCLUDE /etc/bind/Kexample.com.+007+22425.key
+$INCLUDE /etc/bind/Kexample.com.+007+61584.key

@@ -1,0 +1,47 @@
+
+* On Primary DNS Server
+
+allow-transfer  { 192.168.254.130; }; //Allow Transfer of zone from the master server
+
+also-notify { 192.168.254.130; }; //Notify slave for zone changes
+
+
+*****Forward and Reverse
+allow-update { none; }; //Since this is the primary DNS, it should be none.
+
+     allow-transfer  { 172.16.10.15; }; //Allow Transfer of zone from the master server
+
+     also-notify { 172.16.10.15; }; //Notify slave for zone changes
+
+
+
+* On Slave DNS Server
+
+	sudo apt-get install -y bind9 bind9utils bind9-doc dnsutils
+
+//Forward Zone
+zone "example.com" IN { //Domain name 
+
+     type slave; //Secondary Slave DNS
+
+     file "/var/cache/bind/db.example.com"; //Forward Zone Cache file
+
+     masters { 172.10.20.2; }; //Master Server IP
+
+};
+
+//Reverse Zone
+zone "20.10.172.in-addr.arpa" IN { //Reverse lookup name. Should match your network in reverse order
+
+     type slave; // Secondary/Slave DNS
+
+     file "/var/cache/bind/db.10"; //Reverse Zone Cache file
+
+     masters { 172.10.20.2; }; //Master Server IP
+
+};
+
+
+
+
+
