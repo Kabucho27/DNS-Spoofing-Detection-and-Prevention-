@@ -1,4 +1,4 @@
-
+***Setting Up the Slave DNS SERVER
 * On Primary DNS Server
 
 allow-transfer  { 192.168.254.130; }; //Allow Transfer of zone from the master server
@@ -26,7 +26,7 @@ zone "example.com" IN { //Domain name
 
      file "/var/cache/bind/db.example.com"; //Forward Zone Cache file
 
-     masters { 172.10.20.2; }; //Master Server IP
+     masters { <primary server ip address>; }; //Master Server IP
 
 };
 
@@ -37,7 +37,7 @@ zone "20.10.172.in-addr.arpa" IN { //Reverse lookup name. Should match your netw
 
      file "/var/cache/bind/db.10"; //Reverse Zone Cache file
 
-     masters { 172.10.20.2; }; //Master Server IP
+     masters { <primary ip address>; }; //Master Server IP
 
 };
 

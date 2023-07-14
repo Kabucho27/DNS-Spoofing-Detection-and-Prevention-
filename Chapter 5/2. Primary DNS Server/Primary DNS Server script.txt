@@ -1,32 +1,26 @@
-****Original bind files
-db.0
-db.127
-db.255
-db.empty
-db.local
-named.conf
-named.conf.default-zones
-named.conf.local
-named.conf.options
-rndx.key
-zones.rfc1918
 
  *** How to Install and Configure DNS Server on Ubuntu 20 19 18 LTS
- 
- Replace :
- Domain Name : example.com
+Domain Name : example.com
  Server DNS :
 	- HostName : dns1
 	- FQDN : dns1.example.com 
 	- IP : 192.168.254.129
 	- Network : 192.168.1.0/24
-******* ******* ********
+
+***Files to use
+db.10 - cp db.0 to db.10 (Reverse file)
+db.example.com - cp db.local to db.example.com (Forward file)
+db.conf.local 
+db.conf.options
+
 	
-	Installing bind9
-	apt install -y bind9 bind9utils bind9-doc dnsutils
+***Step 1 - Install bind
+	#apt update && upgrade
+	#apt install -y bind9 bind9utils bind9-doc dnsutils
 
 *** Forward Zone (db.example.com - cp db.local db.example.com)
 
+***************************************************************************
 zone "example.com" IN { // Domain name : example.com
     
       type master; // Primary DNS : master
@@ -35,20 +29,7 @@ zone "example.com" IN { // Domain name : example.com
 
 };
 
-
-
-
-*** Reverse Zone 
-
-zone "254.168.192.in-addr.arpa" { //Reverse lookup name, should match your network in reverse order
-
-     type master; // Primary DNS : master
-     file "/etc/bind/db.10"; //Reverse lookup file cp db.127 db.10
-};
-
-
-
-*** Forward lookup file (db.example.com
+*** Forward lookup file (db.example.com)
 ;
 ; Bind data file for example.com
 ;
@@ -75,7 +56,17 @@ dns1	IN	A	192.168.1.14
 
 www	IN	CNAME 	dns1.example.com.
 ftp	IN	CNAME	dns1.example.com.
+****************************************************************************
 
+****************************************************************************
+
+*** Reverse Zone 
+
+zone "254.168.192.in-addr.arpa" { //Reverse lookup name, should match your network in reverse order
+
+     type master; // Primary DNS : master
+     file "/etc/bind/db.10"; //Reverse lookup file cp db.127 db.10
+};
 
 *** Reverse lookup file
 
@@ -97,9 +88,27 @@ $TTL	604800
 
 ;---PTR Record IP address to HostName
 
+******************************************************************************
+******************************************************************************
 
-/var/log/syslog
-/etc/resolv.conf
-name server <ipaddress>
-otpions...
-search <domainname>
+***Forwarders in named.conf.options
+{server ip address}
+******************************************************************************
+******************************************************************************
+
+***Add nameserve for resolving
+nameserver <ip address>
+******************************************************************************
+******************************************************************************
+***Check for errors and restart bind 9
+#named-checkconf
+#named-checkzone (for checking reverse and forward)
+#systemctl restart bind9
+
+******************************************************************************
+******************************************************************************
+***Test
+ping your server
+nslookup
+******************************************************************************
+******************************************************************************
