@@ -16,7 +16,7 @@ Domain Name : example.com
 	- HostName : dns1
 	- FQDN : dns1.example.com 
 	- IP : 192.168.254.129
-	- Network : 192.168.1.0/24
+	- Network : 192.168.1.0/28
 
 ***Files to use
 db.10 - cp db.0 to db.10 (Reverse file)
@@ -28,6 +28,8 @@ db.conf.options
 ***Step 1 - Install bind
 	#apt update && upgrade
 	#apt install -y bind9 bind9utils bind9-doc dnsutils
+	#systemctl status bind9
+	#named -v //to check version
 
 *** Forward Zone (db.example.com - cp db.local db.example.com)
 
