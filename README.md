@@ -2,9 +2,9 @@
 Project 3rd Year
 
 ## Table of Contents
-+ [Primary DNS SERVER Guide](#Primary_DNS_SERVER_Guide)
-+ [Slave DNS SERVER Guide](#Slave_DNS_SERVER_Guide)
-+ [DNSSEC Master Configuration](#DNSSEC_Master_Configuration)
++ [Primary DNS SERVER Guide](#Primary-DNS-SERVER-Guide)
++ [Slave DNS SERVER Guide](#Slave-DNS-SERVER-Guide)
++ [DNSSEC Master Configuration](#DNSSEC-Master-Configuration)
 
 
 ## Primary DNS SERVER Guide 
