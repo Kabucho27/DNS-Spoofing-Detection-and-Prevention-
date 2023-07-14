@@ -218,7 +218,8 @@ Change the file option inside the zone { } section.
 	    allow-update { none; };
 	};
 
-Step 6: Restart bind and 
+Step 6: Restart bind
+	#systemctl restart bind9
 
 Step 7: Check for the DNSKEY record using "dig" on the same server
 	#dig DNSKEY example.com. @localhost +multiline
