@@ -217,10 +217,11 @@ $INCLUDE /etc/bind/Kexample.com.+007+61584.key
 ### Step 5: Sign the zone with the dnssec-signzone command.
 ```
 	dnssec-signzone -3 <salt> -A -N INCREMENT -o <zonename> -t <zonefilename>
+	dnssec-signzone -A -3 $(head -c 1000 /dev/random | sha1sum | cut -b 1-16) -N INCREMENT -o example.com -t db.example.com
 ```
 A 16 character string must be entered as the “salt”. The following command:
 ```
-head -c 1000 /dev/random | sha1sum | cut -b 1-16) outputs a random string of 16 characters which will be used as the salt.
+(head -c 1000 /dev/random | sha1sum | cut -b 1-16) outputs a random string of 16 characters which will be used as the salt.
 ```
 This creates a new file named example.com.zone.signed which contains RRSIG records for each DNS record. We have to tell BIND to load this “signed” zone.
 
