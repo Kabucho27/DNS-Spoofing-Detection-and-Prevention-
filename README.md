@@ -21,14 +21,17 @@ db.10 - cp db.0 to db.10 (Reverse file)
 db.example.com - cp db.local to db.example.com (Forward file)
 db.conf.local 
 db.conf.options
-
+```
 	
 ### Step 1 - Install bind
+```
 	#apt update && upgrade
 	#apt install -y bind9 bind9utils bind9-doc dnsutils
 	#systemctl status bind9
 	#named -v //to check version
-
+```
+### Step 2: Edit the local file and add the forward zone
+```
 *** Forward Zone (db.example.com - cp db.local db.example.com)
 
 ***************************************************************************
@@ -39,8 +42,13 @@ zone "example.com" IN { // Domain name : example.com
      file "/etc/bind/db.example.com"; // Forward lookup file  
 
 };
-
-*** Forward lookup file (db.example.com)
+```
+### Step 3: Copy db.local to a new file for our forward zone file
+```
+#cp db.local db.example.com
+```
+### Step 4: Edit Forward Lookup file (db.example.com)
+```
 ;
 ; Bind data file for example.com
 ;
@@ -67,10 +75,9 @@ dns1	IN	A	192.168.1.14
 
 www	IN	CNAME 	dns1.example.com.
 ftp	IN	CNAME	dns1.example.com.
-****************************************************************************
-
-****************************************************************************
-
+```
+### Step 5: Edit the local file and add the reverse zone
+```
 *** Reverse Zone 
 
 zone "254.168.192.in-addr.arpa" { //Reverse lookup name, should match your network in reverse order
@@ -78,7 +85,9 @@ zone "254.168.192.in-addr.arpa" { //Reverse lookup name, should match your netwo
      type master; // Primary DNS : master
      file "/etc/bind/db.10"; //Reverse lookup file cp db.127 db.10
 };
-
+```
+### Step 6: Copy db.0 to db.10 which is our reverse lookup file
+```
 *** Reverse lookup file
 
 ;
@@ -98,31 +107,37 @@ $TTL	604800
 10	IN	PTR	dns1.example.com.
 
 ;---PTR Record IP address to HostName
-
-******************************************************************************
-******************************************************************************
-
-***Forwarders in named.conf.options
-{server ip address}
-******************************************************************************
-******************************************************************************
-
-***Add nameserve for resolving
-nameserver <ip address>
-******************************************************************************
-******************************************************************************
-***Check for errors and restart bind 9
+```
+### Step 7: Edit the named.conf.options file to add the forwader
+This is the ip address of our domain name server:
+```
+	server{
+		172.20.10.2;
+	}
+```
+### Step 8: Add the resolving IP address in the the resolv file
+Resolve file is: /etc/conf.resolv
+Add nameserver for resolving and the slave address:
+```
+nameserver 172.20.10.2
+nameserver 172.20.10.4
+```
+Comment out the nameserver 172.10.0.0
+```
+#nameserver 172.10.0.0
+```
+###Step 9: Check for errors and restart bind9
+```
 #named-checkconf
-#named-checkzone (for checking reverse and forward)
+#named-checkzone db.example db.example.com
+#named-checkzone 10.20.172.in.addr db.10
 #systemctl restart bind9
-
-******************************************************************************
-******************************************************************************
-***Test
-ping your server
-nslookup
-******************************************************************************
-******************************************************************************
+```
+### Step 10: Test the Primary DNS Server
+```
+#ping your <ip address / domain name>
+#nslookup
+#dig -x 172.20.10.2
 ```
 ## Slave DNS SERVER Guide
 ```
