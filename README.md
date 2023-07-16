@@ -125,7 +125,7 @@ Comment out the nameserver 172.10.0.0
 ```
 #nameserver 172.10.0.0
 ```
-###Step 9: Check for errors and restart bind9
+### Step 9: Check for errors and restart bind9
 ```
 #named-checkconf
 #named-checkzone db.example db.example.com
