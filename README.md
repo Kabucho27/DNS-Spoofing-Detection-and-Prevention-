@@ -31,9 +31,8 @@ db.conf.options
 ```
 ### Step 2: Edit the local file and add the forward zone
 ```
-*** Forward Zone (db.example.com - cp db.local db.example.com)
+//Forward Zone (db.example.com - cp db.local db.example.com)
 
-***************************************************************************
 zone "example.com" IN { // Domain name : example.com
     
       type master; // Primary DNS : master
@@ -108,16 +107,17 @@ $TTL	604800
 ;---PTR Record IP address to HostName
 ```
 ### Step 7: Edit the named.conf.options file to add the forwader
-This is the ip address of our domain name server:
 ```
+//This is the ip address of our domain name server:
+
 	server{
 		172.20.10.2;
 	}
 ```
 ### Step 8: Add the resolving IP address in the the resolv file
-Resolve file is: /etc/conf.resolv
-Add nameserver for resolving and the slave address:
 ```
+//Resolve file is: /etc/conf.resolv
+//Add nameserver for resolving and the slave address:
 nameserver 172.20.10.2
 nameserver 172.20.10.4
 ```
@@ -185,58 +185,67 @@ zone "20.10.172.in-addr.arpa" IN { //Reverse lookup name. Should match your netw
 
 ```
 ## DNSSEC Master Configuration
+### Step 1: Download and Install dnssec-tools package.
 ```
-Step 1: Download and Install dnssec-tools package.
 #apt-get install dnssec-tools
-
-Step 2: Enable DNSSEC by adding the following configuration directives inside options{ }
-"nano /etc/bind/named.conf.options"
-	modify and add:
-		dnssec-enable yes;
+```
+### Step 2: Enable DNSSEC by adding the following configuration directives inside options{ }
+```
+#nano /etc/bind/named.conf.options
+```
+modify and add:
+```
+  		dnssec-enable yes;
 		dnssec-validation yes;
 		dnssec-lookaside auto;
-
-
-Step 3: Navigate to the location of your zone files.
-	#cd /var/cache/bind
-		Create a Zone Signing Key(ZSK) with the following command.
+```
+### Step 3: Navigate to the location of your zone files.
+```
+ #cd /var/cache/bind
+		//Create a Zone Signing Key(ZSK) with the following command.
 	#dnssec-keygen -a NSEC3RSASHA1 -b 2048 -n ZONE example.com
-		Create a Key Signing Key(KSK) with the following command.
+		//Create a Key Signing Key(KSK) with the following command.
 	dnssec-keygen -f KSK -a NSEC3RSASHA1 -b 4096 -n ZONE example.com
-
+```
 The directory will now have 4 keys - private/public pairs of ZSK and KSK. We have to add the public keys which contain the DNSKEY record to the zone file.
 
-
-Step 4: add the public keys in (db.example.com)
-
+### Step 4: add the public keys in (db.example.com)
+```
 $INCLUDE /etc/bind/Kexample.com.+007+22425.key
 $INCLUDE /etc/bind/Kexample.com.+007+61584.key
-
-Step 5: Sign the zone with the dnssec-signzone command.
+```
+### Step 5: Sign the zone with the dnssec-signzone command.
+```
 	dnssec-signzone -3 <salt> -A -N INCREMENT -o <zonename> -t <zonefilename>
-
-A 16 character string must be entered as the “salt”. 
-The following command (head -c 1000 /dev/random | sha1sum | cut -b 1-16) outputs a random string of 16 characters which will be used as the salt.
-
+```
+A 16 character string must be entered as the “salt”. The following command:
+```
+head -c 1000 /dev/random | sha1sum | cut -b 1-16) outputs a random string of 16 characters which will be used as the salt.
+```
 This creates a new file named example.com.zone.signed which contains RRSIG records for each DNS record. We have to tell BIND to load this “signed” zone.
 
-Step 6: Change the pointer file to "example.com.zone.signed"
+### Step 6: Change the pointer file to "example.com.zone.signed"
+```
 #nano /etc/bind/named.conf.local
-Change the file option inside the zone { } section.
-	zone "example.com" IN {
+```
+Change the file option inside the zone { } section:
+```
+ zone "example.com" IN {
 	    type master;
 	    file "example.com.zone.signed";
 	    allow-transfer { 2.2.2.2; };
 	    allow-update { none; };
 	};
-
-Step 6: Restart bind
-	#systemctl restart bind9
-
-Step 7: Check for the DNSKEY record using "dig" on the same server
-	#dig DNSKEY example.com. @localhost +multiline
-
-Step 8: Check for the presence of RRSIG records.
-	#dig A example.com. @localhost +noadditional +dnssec +multiline	
-
+```
+### Step 6: Restart bind
+```
+ #systemctl restart bind9
+```
+### Step 7: Check for the DNSKEY record using "dig" on the same server
+```
+ #dig DNSKEY example.com. @localhost +multiline
+```
+### Step 8: Check for the presence of RRSIG records.
+```
+ #dig A example.com. @localhost +noadditional +dnssec +multiline	
 ```
