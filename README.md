@@ -8,7 +8,6 @@ Project 3rd Year
 
 
 ## Primary DNS SERVER Guide 
-```
 Domain Name : example.com
  Server DNS :
 	- HostName : dns1
@@ -21,7 +20,6 @@ db.10 - cp db.0 to db.10 (Reverse file)
 db.example.com - cp db.local to db.example.com (Forward file)
 db.conf.local 
 db.conf.options
-```
 	
 ### Step 1 - Install bind
 ```
