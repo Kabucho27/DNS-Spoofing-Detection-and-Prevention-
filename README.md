@@ -9,8 +9,6 @@ Project 3rd Year
 
 ## Primary DNS SERVER Guide 
 ```
-
- *** How to Install and Configure DNS Server on Ubuntu 20 19 18 LTS
 Domain Name : example.com
  Server DNS :
 	- HostName : dns1
@@ -25,7 +23,7 @@ db.conf.local
 db.conf.options
 
 	
-***Step 1 - Install bind
+### Step 1 - Install bind
 	#apt update && upgrade
 	#apt install -y bind9 bind9utils bind9-doc dnsutils
 	#systemctl status bind9
