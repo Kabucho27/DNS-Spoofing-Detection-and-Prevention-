@@ -7,7 +7,8 @@ Project 3rd Year
 + [DNSSEC Master Configuration](#DNSSEC-Master-Configuration)
 
 
-## Primary DNS SERVER Guide 
+## Primary DNS SERVER Guide
+```
 Domain Name : example.com
  Server DNS :
 	- HostName : dns1
@@ -16,11 +17,11 @@ Domain Name : example.com
 	- Network : 192.168.1.0/28
 
 ***Files to use
-db.10 - cp db.0 to db.10 (Reverse file)
+db.10 - cp db.0 to db.10 (Reverse file) 
 db.example.com - cp db.local to db.example.com (Forward file)
 db.conf.local 
 db.conf.options
-	
+```	
 ### Step 1 - Install bind
 ```
 	#apt update && upgrade
