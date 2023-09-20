@@ -116,7 +116,7 @@ $TTL	604800
 ```
 ### Step 8: Add the resolving IP address in the the resolv file
 ```
-//Resolve file is: /etc/conf.resolv
+//Resolve file is: /etc/resolv.conf
 //Add nameserver for resolving and the slave address:
 nameserver 172.20.10.2
 nameserver 172.20.10.4
